@@ -2,6 +2,19 @@ import React, { Component } from 'react';
 import universal from 'react-universal-component';
 import { Link, Route, Switch } from 'react-router-dom';
 import styles from '../css/App.less';
+import { ReactModule } from '../core/react-module';
+
+const asyncWork = (props) => {
+    return import('./Example.module').then((module) => {
+        const Instance: ReactModule = new module.default();
+        return <Instance.bootstrap {...props}/>;
+    })
+}
+
+const UniversalExample = universal(asyncWork, {
+    resolve: () => require.resolveWeak('./Example'),
+    minDelay: 500
+})
 
 
 export default class App extends React.Component {
@@ -29,7 +42,7 @@ export default class App extends React.Component {
                 <Link to="/lazy">Lazy Route</Link>
                 <Switch>
                     <Route exact path="/" component={LLExample}/>
-                    <Route path="/lazy" component={LLExample}/>
+                    <Route path="/lazy" component={UniversalExample}/>
                 </Switch>
             </div>
         )
@@ -43,16 +56,3 @@ export class LLExample extends Component<any, any> {
         )
     }
 }
-const asyncWork = async props => {
-    const prom = await Promise.all([
-        import('./Example'),
-        fetch(`/user?id=${props.id}`)
-    ])
-
-    const Component = prom[0].default
-    const data = await prom[1].json()
-
-    return props => <Component data={data} {...props} />
-}
-
-const UniversalComponent = () => universal(asyncWork, { asyncOnly: true } )
