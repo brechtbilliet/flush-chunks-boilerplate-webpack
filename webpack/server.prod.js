@@ -33,15 +33,18 @@ module.exports = {
         use: ['babel-loader', 'ts-loader']
       },
       {
-        test: /\.css$/,
+        test: /\.less/,
         exclude: /node_modules/,
-        use: {
-          loader: 'css-loader/locals',
-          options: {
-            modules: true,
-            localIdentName: '[name]__[local]--[hash:base64:5]'
-          }
-        }
+        use: [
+          {
+            loader: 'css-loader/locals',
+            options: {
+              modules: true,
+              localIdentName: '[name]__[local]--[hash:base64:5]'
+            }
+          },
+          'less-loader'
+        ]
       }
     ]
   },
