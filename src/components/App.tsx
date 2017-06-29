@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
 import universal from 'react-universal-component';
-import { Route, Switch, Link } from 'react-router-dom';
+import { Link, Route, Switch } from 'react-router-dom';
 import styles from '../css/App.less';
 
-const UniversalExample = universal(() => import('./Example'), {
-    resolve: () => require.resolveWeak('./Example'),
-    minDelay: 500
-})
 
 export default class App extends React.Component {
     // set `show` to `true` to see dynamic chunks served by initial request
@@ -32,7 +28,7 @@ export default class App extends React.Component {
                 <Link to="/">Home</Link><br/>
                 <Link to="/lazy">Lazy Route</Link>
                 <Switch>
-                    <Route exact path="/" component={UniversalExample}/>
+                    <Route exact path="/" component={LLExample}/>
                     <Route path="/lazy" component={LLExample}/>
                 </Switch>
             </div>
@@ -47,3 +43,16 @@ export class LLExample extends Component<any, any> {
         )
     }
 }
+const asyncWork = async props => {
+    const prom = await Promise.all([
+        import('./Example'),
+        fetch(`/user?id=${props.id}`)
+    ])
+
+    const Component = prom[0].default
+    const data = await prom[1].json()
+
+    return props => <Component data={data} {...props} />
+}
+
+const UniversalComponent = () => universal(asyncWork, { asyncOnly: true } )
