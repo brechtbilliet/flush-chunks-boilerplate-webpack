@@ -44,6 +44,8 @@
     "eslint-plugin-react": "^6.10.3",
     "extract-css-chunks-webpack-plugin": "^1.0.12",
     "husky": "^0.13.2",
+    "less": "^2.7.2",
+    "less-loader": "^4.0.4",
     "lint-staged": "^3.4.0",
     "prettier": "^1.2.2",
     "react-hot-loader": "next",
