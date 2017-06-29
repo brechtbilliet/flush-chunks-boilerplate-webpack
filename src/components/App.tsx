@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
 import universal from 'react-universal-component';
+import { Route, Switch, Link } from 'react-router-dom';
 import styles from '../css/App.less';
-import { Route, BrowserRouter } from 'react-router-dom';
-import { asyncComponent } from 'react-async-component';
 
-import { BASE_HREF } from '../constants';
-
-const supportsHistory = 'pushState' in window.history;
 const UniversalExample = universal(() => import('./Example'), {
     resolve: () => require.resolveWeak('./Example'),
     minDelay: 500
@@ -33,9 +29,12 @@ export default class App extends React.Component {
         return (
             <div>
                 <h1 className={styles.title}>Hello World</h1>
-                <BrowserRouter forceRefresh={!supportsHistory} basename={BASE_HREF}>
-                    <Route path="/" component={LLExample}/>
-                </BrowserRouter>
+                <Link to="/">Home</Link><br/>
+                <Link to="/lazy">Lazy Route</Link>
+                <Switch>
+                    <Route exact path="/" component={UniversalExample}/>
+                    <Route path="/lazy" component={LLExample}/>
+                </Switch>
             </div>
         )
     }
