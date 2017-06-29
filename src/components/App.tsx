@@ -4,10 +4,10 @@ import { Link, Route, Switch } from 'react-router-dom';
 import styles from '../css/App.less';
 import { ReactModule } from '../core/react-module';
 
-const asyncWork = () => {
+const asyncWork = (props) => {
     return import('./Example.module').then((module) => {
-        const instance: ReactModule = new module.default();
-        return instance.bootstrap();
+        const Instance: ReactModule = new module.default();
+        return <Instance.bootstrap {...props}/>;
     })
 }
 
