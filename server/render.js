@@ -3,7 +3,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/server'
 import { flushModuleIds } from 'react-universal-component/server'
 import flushChunks from 'webpack-flush-chunks'
-import App from '../src/components/App'
+import App from '../src/components/App.tsx'
 
 export default ({ clientStats, outputPath }) => (req, res, next) => {
   const app = ReactDOM.renderToString(<App />)

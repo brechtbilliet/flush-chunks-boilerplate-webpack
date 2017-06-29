@@ -7,7 +7,7 @@ module.exports = {
   name: 'client',
   target: 'web',
   devtool: 'source-map',
-  entry: [path.resolve(__dirname, '../src/index.js')],
+  entry: [path.resolve(__dirname, '../src/index.tsx')],
   output: {
     filename: '[name].[chunkhash].js',
     path: path.resolve(__dirname, '../buildClient'),
@@ -16,9 +16,8 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: 'babel-loader'
+        test: /\.tsx?$/,
+        use: ['babel-loader', 'ts-loader']
       },
       {
         test: /\.css$/,
@@ -33,6 +32,9 @@ module.exports = {
         })
       }
     ]
+  },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.json']
   },
   plugins: [
     new StatsPlugin('stats.json'),

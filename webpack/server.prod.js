@@ -18,12 +18,19 @@ module.exports = {
     filename: '[name].js',
     libraryTarget: 'commonjs2'
   },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.json']
+  },
   module: {
     rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
         use: 'babel-loader'
+      },
+      {
+        test: /\.tsx?$/,
+        use: ['babel-loader', 'ts-loader']
       },
       {
         test: /\.css$/,

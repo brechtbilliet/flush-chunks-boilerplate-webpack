@@ -12,7 +12,7 @@ const render = App =>
   )
 
 if (process.env.NODE_ENV === 'development') {
-  module.hot.accept('./components/App.js', () => {
+  module.hot.accept('./components/App', () => {
     const App = require('./components/App').default
     render(App)
   })
