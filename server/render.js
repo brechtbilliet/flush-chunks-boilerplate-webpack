@@ -1,12 +1,18 @@
-import path from 'path'
 import React from 'react'
 import ReactDOM from 'react-dom/server'
 import { flushModuleIds } from 'react-universal-component/server'
 import flushChunks from 'webpack-flush-chunks'
+import { StaticRouter } from 'react-router-dom'
 import App from '../src/components/App.tsx'
 
 export default ({ clientStats, outputPath }) => (req, res, next) => {
-  const app = ReactDOM.renderToString(<App />)
+  const context = {}
+  const app = (
+    <StaticRouter location={req.url} context={context}>
+      <App />
+    </StaticRouter>
+  )
+  const appString = ReactDOM.renderToString(app)
   const moduleIds = flushModuleIds()
 
   const {
@@ -48,7 +54,7 @@ export default ({ clientStats, outputPath }) => (req, res, next) => {
           ${styles}
         </head>
         <body>
-          <div id="root">${app}</div>
+          <div id="root">${appString}</div>
           ${js}
         </body>
       </html>`
