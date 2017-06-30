@@ -2,12 +2,13 @@ import { ReactModule } from './react-module';
 export function Module(options: ReactModule): any {
     return (target: any) => {
         return () => {
-            const returnObj = new target() as any;
-            returnObj.providers = options.providers;
-            returnObj.bootstrap = options.bootstrap;
-            returnObj.imports = options.imports as ReactModule[];
-
-            return returnObj;
+            const instance = new target() as any;
+            instance.providers = options.providers;
+            instance.bootstrap = options.bootstrap;
+            instance.imports = options.imports as ReactModule[];
+            console.log(`bootstrap ${instance.constructor.name}`);
+            instance.bootstrapModule();
+            return instance;
         };
     }
 }

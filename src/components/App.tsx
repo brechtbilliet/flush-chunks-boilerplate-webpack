@@ -1,39 +1,19 @@
+import 'reflect-metadata';
 import React, { Component } from 'react';
 import universal from 'react-universal-component';
 import { Link, Route, Switch } from 'react-router-dom';
+import { Bootstrapper } from '../core/bootstrapper';
+import AppModule from './App.module';
+
 import styles from '../css/App.less';
-import { ReactModule } from '../core/react-module';
 
-const asyncWork = (props) => {
-    return import('./Example.module').then((module) => {
-        const Instance: ReactModule = new module.default();
-        return <Instance.bootstrap {...props}/>;
-    })
-}
+const UniversalExample = universal(() => import('./Example.module'), {
+    resolve: () => require.resolveWeak('./Example.module'),
+});
 
-const UniversalExample = universal(asyncWork, {
-    resolve: () => require.resolveWeak('./Example'),
-    minDelay: 500
-})
-
+Bootstrapper.bootstrapRoot(AppModule);
 
 export default class App extends React.Component {
-    // set `show` to `true` to see dynamic chunks served by initial request
-    // set `show` to `false` to test how asynchronously loaded chunks behave,
-    // specifically how css injection is embedded in chunks + corresponding HMR
-    state = {
-        show: true
-    }
-
-    componentDidMount() {
-        if (this.state.show) return
-
-        setTimeout(() => {
-            console.log('now showing <Example />')
-            this.setState({show: true})
-        }, 1500)
-    }
-
     render() {
         return (
             <div>

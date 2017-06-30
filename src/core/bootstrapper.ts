@@ -1,7 +1,5 @@
 import { ReactModule } from './react-module';
 import { Container } from 'inversify';
-// import { asyncComponent } from 'react-async-component';
-import { ComponentClass } from 'react';
 
 export class Bootstrapper {
     static ioc: Container;
@@ -11,6 +9,14 @@ export class Bootstrapper {
         Bootstrapper.bootstrap(instance);
     }
 
+    static bootstrapChildren(imports: any): void {
+        if (imports && imports.length) {
+            imports.forEach(childModule => {
+                Bootstrapper.bootstrapChild(childModule);
+            });
+        }
+    }
+
     private static bootstrapChild(mod: any): void {
         const instance: ReactModule = new mod();
         if (instance.imports) {
@@ -18,24 +24,24 @@ export class Bootstrapper {
                 Bootstrapper.bootstrapChild(childModule);
             });
         }
-        Bootstrapper.bindProviders(instance);
+        Bootstrapper.bindProviders(instance.providers);
     }
 
-    static lazyLoadModule(mod: any, resolveFn: Function): void {
-        const instance: ReactModule = new mod.default();
-        Bootstrapper.bootstrapChild(mod.default);
-        resolveFn(instance.bootstrap);
+    // static lazyLoadModule(mod: any, resolveFn: Function): void {
+    //     const instance: ReactModule = new mod.default();
+    //     Bootstrapper.bootstrapChild(mod.default);
+    //     resolveFn(instance.bootstrap);
+    //
+    // }
 
-    }
-
-    static lazyLoad(requireFn): ComponentClass<any> {
-        throw new Error();
-        // return asyncComponent({
-        //     resolve: () => new Promise(resolve => {
-        //         requireFn(resolve);
-        //     })
-        // })
-    }
+    // static lazyLoad(requireFn): ComponentClass<any> {
+    //     throw new Error();
+    //     // return asyncComponent({
+    //     //     resolve: () => new Promise(resolve => {
+    //     //         requireFn(resolve);
+    //     //     })
+    //     // })
+    // }
 
     private static bootstrap(module: ReactModule): void {
         Bootstrapper.ioc = new Container();
@@ -46,12 +52,12 @@ export class Bootstrapper {
                 Bootstrapper.bootstrapChild(childModule);
             })
         }
-        Bootstrapper.bindProviders(module);
+        Bootstrapper.bindProviders(module.providers);
     }
 
-    private static bindProviders(module: ReactModule): void {
-        if (module.providers) {
-            module.providers.forEach(provider => {
+    static bindProviders(providers: any): void {
+        if (providers && providers.length) {
+            providers.forEach(provider => {
                 if (!Bootstrapper.ioc.isBound(provider)) {
                     Bootstrapper.ioc.bind(provider).to(provider).inSingletonScope();
                 }

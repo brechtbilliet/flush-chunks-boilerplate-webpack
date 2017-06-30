@@ -1,10 +1,13 @@
 import { Module } from '../core/module-decorator';
-import Example from './Example';
+import ExampleContainer from './Example.container';
+import BootstrapContainer from '../core/BootstrapContainer';
+import { Store } from '../core/store';
 
 @Module({
-    providers: [],
     imports: [],
-    bootstrap: Example
+    providers: [Store],
+    bootstrap: ExampleContainer
 })
-export default class DealRoomModule {
+export default class ExampleModule extends BootstrapContainer {
+
 }
